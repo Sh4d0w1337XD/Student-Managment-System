@@ -67,21 +67,35 @@ int main(void) {
 		else if (input == 's' || input == '\t') selected = (selected + 1) % MENU_OPTIONS;
 		else if (input == '\n'){
 			switch(selected){
-				case DISPLAY_STUDENTS: display_students();
-				                       print_menu(selected);
-				                       break;
-				case MANAGE_STUDENTS: print_student_menu();
-					              print_menu(selected);
-					              break;
-				case MODIFY_GRADES: print_grade_menu();
-					            print_menu(selected);
-				                    break;
-				case QUIT: printf("\033[?25h");
-					   return 0;
+				case DISPLAY_STUDENTS:
+				{
+					display_students();
+				    print_menu(selected);
+				    break;
+				}
+				case MANAGE_STUDENTS:
+				{
+					print_student_menu();
+					print_menu(selected);
+					break;
+				}
+				case MODIFY_GRADES: 
+				{
+					print_grade_menu();
+					print_menu(selected);
+				    break;
+				}
+				case QUIT:
+				{
+					free(students); 
+					printf("\033[?25h");
+					return 0;
+				}
 				default: return -1;
 			}
 		}
 	}
+	
 	free(students);
 	printf("\033[?25h");
 	return 0;
@@ -92,13 +106,13 @@ void add_student(void){
 	char surname[32];
 	char buff_age[8];
 	uint8_t age = 0;
-        int c;
+    int c;
 
 	printf("\033[H\033[J"); // clear screen
 	printf("\033[?25h");    // show cursor
 	printf("\n  Enter the students's name: ");
 	scanf("%s", name);
-        printf("  Enter the students's surname: ");
+    printf("  Enter the students's surname: ");
 	scanf("%s", surname);
 
         do {
@@ -129,19 +143,19 @@ void add_student(void){
 	strcpy(students[students_index].surname, surname);
 	students[students_index].age = age;
 
-	if(grade_n > 0 && grade_n <= 5){
+	if (grade_n > 0 && grade_n <= 5) {
 	    students[students_index].grades[0] = grade_n;
 	    students[students_index].grades_counter = 1;
 	}
 	students_index++;
 
-        // SAVE TO FILE
-        FILE *dat_file = fopen(DATA_FILE, "a");
-        if (grade_n == 0)
-          fprintf(dat_file, "STUDENT_%d\n{\nNAME:%s\nSURNAME:%s\nAGE:%d\nGRADES:\n}\n", students_index, name, surname, age);
-        else
-          fprintf(dat_file, "STUDENT_%d\n{\nNAME:%s\nSURNAME:%s\nAGE:%d\nGRADES:%d\n}\n", students_index, name, surname, age, grade_n);
-        fclose(dat_file);
+	// SAVE TO FILE
+	FILE *dat_file = fopen(DATA_FILE, "a");
+	if (grade_n == 0)
+	  fprintf(dat_file, "STUDENT_%d\n{\nNAME:%s\nSURNAME:%s\nAGE:%d\nGRADES:\n}\n", students_index, name, surname, age);
+	else
+	  fprintf(dat_file, "STUDENT_%d\n{\nNAME:%s\nSURNAME:%s\nAGE:%d\nGRADES:%d\n}\n", students_index, name, surname, age, grade_n);
+	fclose(dat_file);
 
 	printf("\n  \033[1;31mStudent '%s %s' has been added to system\033[0m", students[students_index - 1].name, students[students_index - 1].surname);
 	printf("\033[?25l");  // hide cursor
