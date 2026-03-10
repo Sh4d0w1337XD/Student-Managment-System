@@ -47,25 +47,26 @@ void get_enter(void);
 void load_data(void);
 
 int main(void) {
-        load_data();
+    
+	load_data();
         
-        enum select_options selected = 0;
+    enum select_options selected = 0;
 	char input;
-
 	print_menu(selected);
-	while(1){
-	        printf("\033[H\033[J"); // move cursor to the top-left & clear screen
+	
+	while(1) {
+	    printf("\033[H\033[J"); // move cursor to the top-left & clear screen
 		printf("\033[?25l");    // hide cursor
 		print_menu(selected);
 		
 		input = getch();
 
-		if (input == 'w'){
+		if (input == 'w') {
 			 if (selected > 0) selected = (selected - 1 ) % MENU_OPTIONS;
 			else selected = MENU_OPTIONS - 1;
 		}
 		else if (input == 's' || input == '\t') selected = (selected + 1) % MENU_OPTIONS;
-		else if (input == '\n'){
+		else if (input == '\n') {
 			switch(selected){
 				case DISPLAY_STUDENTS:
 				{
